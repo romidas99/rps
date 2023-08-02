@@ -3,44 +3,45 @@ function getComputerChoice() {
     return outcome[Math.floor(Math.random() * 3)];
 }
 
+const buttons = document.querySelectorAll('button');
+buttons.forEach(function (button) {
+    button.addEventListener('click', () => {
+        playRound(button.value, getComputerChoice());
+    })
+})
+
 const playerSelection = "rock";
 let computerSelection;
 let myScore = 0;
 let comScore = 0;
+const result = document.querySelector('#result')
+const score = document.querySelector('#score')
+const end = document.querySelector('#end')
+
+function gameEnd() {
+    
+    buttons.forEach(function (button) {
+        button.setAttribute("disabled", "true");
+    })
+    if (myScore>comScore) end.append("You won the game! Reload the page to play again");
+    else end.append("You lost the game. Reload the page to play again");
+}
 
 function playRound(playerSelection, computerSelection) {
-    computerSelection = getComputerChoice();
-    playerSelection = prompt("Rock, Paper, Scissors")
-    playerSelection = playerSelection.toLowerCase()
-    playerSelection = playerSelection[0].toUpperCase() + playerSelection.slice(1)
-    if (playerSelection != "Rock" || playerSelection != "Paper" || playerSelection != "Scissors") {
-        console.log("Please input either Rock, Paper, Scissors") 
-    } 
+    console.log(playerSelection, computerSelection)
     if (playerSelection === "Rock" && computerSelection === "Scissors" || playerSelection === "Scissors" && computerSelection === "Paper" || playerSelection === "Paper" && computerSelection === "Rock") {
         myScore++
-        return `You Win! ${playerSelection} beats ${computerSelection}`
+        result.textContent = `You Win! ${playerSelection} beats ${computerSelection}`
+        document.getElementById('menum').textContent = myScore
     }
     else if (playerSelection === computerSelection) {
-        return "Its a Draw!"
+        result.textContent = `Its a Draw! You both chose ${playerSelection}.` 
     }
     else {
         comScore++
-        return `You Lose! ${computerSelection} beats ${playerSelection}`
+        result.textContent = `You Lose! ${computerSelection} beats ${playerSelection}`;
+        document.getElementById('cs').textContent = comScore
     }
+    if (myScore === 5 || comScore === 5) gameEnd();
 }
   
-function game() {
-    
-    for (let i=0; i<5; i++) {
-        playRound()
-    }
-    if (myScore>comScore) {
-        console.log("You won the game")
-    }
-    else if (myScore === comScore) {
-        console.log("It's a draw")
-    }
-    else {
-        console.log("You lost the game")
-    }
-}
